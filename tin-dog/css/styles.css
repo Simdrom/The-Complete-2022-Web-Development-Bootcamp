@@ -1,0 +1,173 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 5rem;
+  line-height: 1.5;
+  font-weight: 900;
+}
+
+h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.container-fluid {
+  padding: 3% 15% 7%;
+}
+
+#title {
+  background-color: #ff4c68;
+  color: #fff;
+  padding-bottom: 1.5rem;
+}
+
+.title-img {
+  transform: rotate(25deg);
+  width: 17%;
+  position: absolute;
+  right: 25%;
+}
+
+/* Navigation Bar */
+.navbar {
+  font-size: 1.5rem;
+  padding: 0 0 3.5rem;
+}
+
+
+.navbar-brand {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 4.5rem;
+  font-weight: 500;
+}
+
+.nav-link {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+}
+
+/* Download buttons */
+.btn-download {
+  font-size: 2rem;
+  margin: 5% 3% 5% 0%;
+}
+
+#greetings {
+  padding-left: 15%;
+}
+
+
+#features {
+  padding-top: 5%;
+  position: relative;
+  background-color: #fff;
+}
+
+#features>div>div>div>i {
+  color: #ef8172;
+  padding-bottom: 1.5rem;
+}
+
+#features>div>div>div>i:hover {
+  color: #ff4c68;
+}
+
+#features>div>div>div>h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+#features>div>div>div>p {
+  color: #8f8f8f;
+}
+
+#testimonials {
+  background-color: #ef8172;
+  color: #fff;
+  position: relative;
+}
+
+#carouselExampleControls>div>div>h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.4rem;
+  font-weight: bold;
+}
+
+#carouselExampleControls>div>div>img {
+  width: 10%;
+  border-radius: 100%;
+  margin: 20px;
+}
+
+#press {
+  background-color: #ef8172;
+}
+
+#press>div>img {
+  width: 15%;
+  margin: 20px 20px 40px;
+}
+
+.carousel-item {
+  padding: 7% 15%;
+}
+
+#pricing>div>div>div>div {
+  margin: 20px 0 20px 0;
+}
+
+.card-header {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+#pricing-subtext>h2 {
+  font-size: 4rem;
+}
+
+
+#pricing-subtext>p {
+  font-size: 1.5rem;
+}
+
+#cta{
+    background-color: #ff4c68;
+}
+
+#cta > .container-fluid {
+  padding: 3% 15% 2%;
+}
+#cta > div > div > div > h3{
+  font-family: 'Montserrat', sans-serif;
+  font-size: 3rem;
+  font-weight: bold;
+}
+#footer > .container-fluid {
+  padding: 3% 15% 2%;
+}
+#footer > div > p{
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 200;
+}
+#footer > div > div > div > i{
+  font-size: 1.5rem;
+  padding:.5rem;
+}
+
+@media (max-width: 1028px){
+  #title{
+    text-align: center;
+  }
+  .title-img {
+    position: static;
+    transform: rotate(0);
+    width: 100%;
+  }
+}

@@ -1,0 +1,25 @@
+<%- include('header'); -%>
+  <div class="box" id="heading">
+    <h1>
+      <%= listTitle %> !
+    </h1>
+  </div>
+
+  <div class="box">
+    <% newListItem.forEach(function(item){ %>
+      <div class="item">
+        <input type="checkbox" name="" id="">
+        <p>
+          <%= item %>
+        </p>
+
+      </div>
+    <% }); %>
+
+        <form action="/" method="post" class="item">
+          <input type="text" class="TodoList-Form-Input" name="NewTodoListItem" placeholder="New Item" autocomplete="off">
+          <button type="submit" class="TodoList-Form-Button" name="list" value=<%= listTitle %> >+</button>
+        </form>
+  </div>
+  <!-- <script src="" async defer></script> -->
+<%- include('footer'); -%>

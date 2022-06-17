@@ -1,0 +1,15 @@
+.big-title {
+  font-size: 10em;
+  font-weight: bold;
+  color: rgb(39, 163, 35);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.margin-50{
+  margin-top: 50px;
+}
+
+.blue-text{
+  color: rgb(35, 54, 163);
+}
