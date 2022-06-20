@@ -2,7 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const mongoose = require('mongoose')
-const encrypt = require('mongoose-encryption')
+// const encrypt = require('mongoose-encryption')
+// const md5 = require('md5')
+const bcrypt = require('bcrypt')
+const saltRounds = 10;
+
 require('dotenv').config()
 
 const app = express();
@@ -29,9 +33,9 @@ const userSchema = new mongoose.Schema({
   password: String,
 });
 
-const secret = process.env.SECRET;
+// const secret = process.env.SECRET;
 
-userSchema.plugin(encrypt, { secret: secret, encryptedFields: ['password'] });
+// userSchema.plugin(encrypt, { secret: secret, encryptedFields: ['password'] });
 
 const User = mongoose.model("User", userSchema);
 // End mongoose connection
@@ -41,6 +45,24 @@ app.set('view engine', 'ejs')
 app.get('/', function (req, res) {
   res.render('home');
 })
+
+app.route('/register')
+  .get((req, res) => {
+    res.render('register');
+  })
+  .post((req, res) => {
+    bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+      const newUser = new User({
+        email: req.body.username,
+        password: hash
+      });
+      newUser.save(function (err) {
+        if (err) throw err
+        else res.render('secrets')
+      })
+    });
+  })
+
 app.route('/login')
   .get((req, res) => {
     res.render('login');
@@ -51,27 +73,18 @@ app.route('/login')
 
     console.log(`Email: ${email} and password: ${password}`)
 
-    User.findOne({ email: email, password: password }, function (err, foundUser) {
+    User.findOne({ email: email}, function (err, foundUser) {
       if (err) throw err
       else {
-        if (foundUser && foundUser.password === password) res.render('secrets')
-        else res.redirect('/')
+        if(foundUser)
+          bcrypt.compare(password, foundUser.password, function(err, result) {
+            // result == true
+            if(result === true) res.render('secrets')
+            else res.redirect('/')
+          });
+        // if (foundUser && foundUser.password === password) res.render('secrets')
+        // else res.redirect('/')
       }
-    })
-  })
-
-app.route('/register')
-  .get((req, res) => {
-    res.render('register');
-  })
-  .post((req, res) => {
-    const newUser = new User({
-      email: req.body.username,
-      password: req.body.password
-    });
-    newUser.save(function (err) {
-      if (err) throw err
-      else res.render('secrets')
     })
   })
 
