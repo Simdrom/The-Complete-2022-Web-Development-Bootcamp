@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const mongoose = require('mongoose')
+const encrypt = require('mongoose-encryption')
+require('dotenv').config()
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,10 +16,12 @@ main().catch(err => console.log(err))
   .finally(console.log(`Mongoose connection did`));
 
 async function main() {
-  const database = 'userDB'
-  const mongoDBPassword = 'mongo'
-  const mongoDB = `mongodb+srv://admin-raul:${mongoDBPassword}@cluster0.n5qqk.mongodb.net`;
-  await mongoose.connect(`${mongoDB}/${database}`);
+  const database = process.env.DB_DATABASE
+  const mongoDBPassword = process.env.DB_PASSWORD
+  const mongoUser = process.env.DB_USER
+  const mongoURL = `${process.env.DB_HOST_1}${mongoUser}:${mongoDBPassword}${process.env.DB_HOST_2}/${database}`;
+
+  await mongoose.connect(mongoURL);
 }
 
 const userSchema = new mongoose.Schema({
@@ -25,7 +29,12 @@ const userSchema = new mongoose.Schema({
   password: String,
 });
 
+const secret = process.env.SECRET;
+
+userSchema.plugin(encrypt, { secret: secret, encryptedFields: ['password'] });
+
 const User = mongoose.model("User", userSchema);
+// End mongoose connection
 
 app.set('view engine', 'ejs')
 
@@ -66,9 +75,9 @@ app.route('/register')
     })
   })
 
-  app.get('/logout', function (req, res) {
-    res.redirect('/')
-  })
+app.get('/logout', function (req, res) {
+  res.redirect('/')
+})
 
 app.listen(port, function () {
   console.log(`Server started on port ${port}`);
