@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+var findOrCreate = require('mongoose-findorcreate')
 
 require('dotenv').config()
 
@@ -41,16 +43,38 @@ async function main() {
 const userSchema = new mongoose.Schema({
   email: String,
   password: String,
+  googleId: String
 });
 
 userSchema.plugin(passportLocalMongoose)
+userSchema.plugin(findOrCreate);
 
 const User = mongoose.model("User", userSchema);
 
 passport.use(User.createStrategy());
 
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.serializeUser((user, done) => {
+  done(null, user.id)
+});
+passport.deserializeUser( (id, done) => {
+  User.findById(id, (err, user) => {
+    done(err, user)
+  })
+});
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "http://localhost:3000/auth/google/secrets",
+  scope: ['profile'],
+},
+  function (accessToken, refreshToken, profile, cb) {
+    console.log(`Profile: ${JSON.stringify(profile)}`)
+    User.findOrCreate({ googleId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
 // End mongoose connection
 
 
@@ -59,6 +83,17 @@ app.get('/', function (req, res) {
   res.render('home');
 })
 
+app.get('/auth/google',
+  passport.authenticate('google', { failureRedirect: '/login', failureMessage: true }),
+  (req, res) => {
+    res.redirect('/');
+  });
+app.get('/auth/google/secrets',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    // Successful authentication, redirect home.
+    res.redirect('/secrets');
+  });
 app.route('/register')
   .get((req, res) => {
     res.render('register');
