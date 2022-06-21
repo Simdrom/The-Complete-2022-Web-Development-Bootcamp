@@ -43,7 +43,8 @@ async function main() {
 const userSchema = new mongoose.Schema({
   email: String,
   password: String,
-  googleId: String
+  googleId: String,
+  secret: String
 });
 
 userSchema.plugin(passportLocalMongoose)
@@ -56,7 +57,7 @@ passport.use(User.createStrategy());
 passport.serializeUser((user, done) => {
   done(null, user.id)
 });
-passport.deserializeUser( (id, done) => {
+passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
     done(err, user)
   })
@@ -133,8 +134,41 @@ app.get('/logout', function (req, res) {
 })
 
 app.get('/secrets', (req, res) => {
-  if (req.isAuthenticated()) res.render('secrets')
+  if (req.isAuthenticated()) {
+    User.find({ "secret": { $ne: null } }, (err, foundUser) => {
+      if (err) throw err
+      else res.render('secrets', { usersWithSecrets: foundUser })
+    })
+
+    // res.render('secrets')
+  }
   else res.redirect('login')
+})
+
+app.get('/submit', (req, res) => {
+  if (req.isAuthenticated()) res.render('submit')
+  else res.redirect('login')
+})
+
+app.post('/submit', (req, res) => {
+  if (req.isAuthenticated()) {
+    const submittedSecret = req.body.secret;
+
+    console.log(req.user.id)
+    User.findById(req.user.id, (err, foundUser) => {
+      if (err) throw err
+      else if (foundUser) {
+        console.log(JSON.stringify(foundUser))
+        foundUser.secret = submittedSecret
+        foundUser.save(() => {
+          res.redirect('secrets')
+        })
+      }
+    })
+
+  }
+  else res.redirect('login')
+
 })
 
 app.listen(port, function () {
